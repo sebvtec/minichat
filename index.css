@@ -1,0 +1,7 @@
+.backgroundPlanche {
+	background-image: url(../backgroundtext.jpg);	
+}
+.btn{
+	border-radius: 25px; background-color: #303030; width: 600px;
+	color: white; position: relative; 
+}
