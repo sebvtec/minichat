@@ -1,0 +1,12 @@
+.backgroundPlanche {
+	background-image: url(../backgroundtext.jpg);	
+}
+.chatBtn{
+	border-radius: 25px; background-color: #303030; 
+	color: white; position: absolute; left: 59px;
+	
+}
+header{
+	position: absolute;
+    left: 670px;
+}
