@@ -4,27 +4,35 @@
 
 	require('models/model.php');
 	
-	$reponse = getMessage();
+	if(isset($_SESSION['pseudo'])) {
+		$reponse = getMessage();
+	}
+	
+	// ecrire un nouveau message
+	if (isset($_POST['message'])) {
+		// insertMsg();
+	}
 
 	if (isset($_POST['registerPseudo'])) {
 		register();
 	}
 	
-	echo "POST";
-	var_dump($_POST);
+	// CONNEXION
 	$afficherChat = false;
 	if (isset($_POST['logEmail'])) {
-		echo "dkazopdkazpo";
-		connexion();
-		
+		$req = getUser($_POST['logEmail']);
+		while ($donnees =$req ->fetch()) {
+			if ($donnees['password'] == $_POST['passduclient']) {
+				$_SESSION['pseudoID'] = $donnees['ID'];
+				$_SESSION['pseudo'] = $donnees['pseudo'];
+				$afficherChat = true;
+			}
+			
+		}
 	}
-	if (isset($_POST['message'])) {
-		displaymessage();
-		
-	}
-	if (isset($_GET['quit'])) {
-		quit();
-		
+
+	if (isset($_POST['quit'])) {
+		session_destroy();
 	}
 
 require('views/viewChat.php');

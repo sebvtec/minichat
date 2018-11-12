@@ -2,14 +2,7 @@
 
 function register(){
 
-	try
-	{
-		$bdd = new PDO('mysql:host=localhost;dbname=test;charset=utf8', 'root', '');
-	}
-	catch(Exception $e)
-	{
-	        die('Erreur : '.$e->getMessage());
-	}
+	$bdd = co();
 
 	// Insertion du message à l'aide d'une requête préparée
 	$req = $bdd->prepare('INSERT INTO utilisateurs (email,pseudo,password,confirmpassword) VALUES(?, ?, ?, ?)');
@@ -25,61 +18,45 @@ function register(){
 
 
 
-function connexion(){
+
+function getUser($mail) {
+	$bdd = co();
+	$req = $bdd->prepare('
+		SELECT *
+		FROM utilisateurs 
+		WHERE utilisateurs.email = :mail
+		ORDER BY ID
+	');
+	$req->bindParam(':mail', $mail, PDO::PARAM_STR);
+	$req->execute();
+	return $req;
+}
+	
+function co() {
 	try
 	{
 		$bdd = new PDO('mysql:host=localhost;dbname=test;charset=utf8', 'root', '');
+		return $bdd;
 	}
 	catch(Exception $e)
 	{
 	        die('Erreur : '.$e->getMessage());
 	}
-
-	echo "test";
-
-	// Insertion du message à l'aide d'une requête préparée
-	$req = $bdd->prepare('SELECT ID ,email ,password FROM utilisateurs ORDER BY ID');
-	while ($donnees =$req ->fetch()) {
-		if ($donnees['email']==$_POST['logEmail'] && $donnees['password']==$_POST['passduclient']) {
-			$_SESSION['pseudoID']=$donnees['ID'];
-			$afficherChat = true;
-			echo "connexion!!!!!!!!!!!!!!!";
-		}
-		
-	}
-	$req->closeCursor();
-
-
-
-
-	// Redirection du visiteur vers la page du minichat
-	header('Location: index.php');
-	
 }
 
 function getMessage() {
-	try
-	{
-		$bdd = new PDO('mysql:host=localhost;dbname=test;charset=utf8', 'root', '');
-	}
-	catch(Exception $e)
-	{
-	        die('Erreur : '.$e->getMessage());
-	}
-	$reponse = $bdd->query('SELECT * FROM messages 
-	      LEFT JOIN utilisateurs ON messages.utilisateurid =utilisateurs.ID; ORDER BY ID DESC LIMIT 0, 10');
+	$bdd = co();
+	$reponse = $bdd->prepare('
+		SELECT * 
+		FROM messages 
+	    LEFT JOIN utilisateurs 
+	    	ON messages.utilisateurid =utilisateurs.ID; ORDER BY ID DESC LIMIT 0, 10');
+	$reponse->execute();
 	return $reponse;
 }
 
-function post(){
-	try
-	{
-		$bdd = new PDO('mysql:host=localhost;dbname=test;charset=utf8', 'root', '');
-	}
-	catch(Exception $e)
-	{
-	        die('Erreur : '.$e->getMessage());
-	}
+function post() {
+	$bdd = co();
 
 	// Insertion du message à l'aide d'une requête préparée
 	$req = $bdd->prepare('INSERT INTO messages(message) VALUES(:message,:utilisateurid)');
@@ -89,23 +66,6 @@ function post(){
 
 	// Redirection du visiteur vers la page du minichat
 	header('Location: index.php');
-
-
-
-function displaymessage(){
-
-			if(isset($_SESSION['pseudoID'])) {
-				while ($donnees = $reponse->fetch())
-				{
-					echo '<p><strong>' . htmlspecialchars($donnees['pseudo']) . '</strong> : ' . htmlspecialchars($donnees['message']) . '</p>';
-				}
-			}
-		}
-
 }
-function quit(){
-	session_destroy();
-	header('Location: index.php');
 
 
-}
