@@ -6,6 +6,8 @@
 	
 	if(isset($_SESSION['pseudo'])) {
 		$reponse = getMessage();
+		
+
 	}
 	
 	// ecrire un nouveau message
@@ -19,13 +21,15 @@
 	
 	// CONNEXION
 	$afficherChat = false;
-	if (isset($_POST['logEmail'])) {
-		$req = getUser($_POST['logEmail']);
+	if (isset($_POST['emailduclient'])) {
+		$req = getUser($_POST['emailduclient']);
 		while ($donnees =$req ->fetch()) {
-			if ($donnees['password'] == $_POST['passduclient']) {
+			if ($donnees['password'] == $_POST['passduclientC']) {
 				$_SESSION['pseudoID'] = $donnees['ID'];
 				$_SESSION['pseudo'] = $donnees['pseudo'];
 				$afficherChat = true;
+				
+
 			}
 			
 		}

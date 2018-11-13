@@ -55,7 +55,7 @@ function getMessage() {
 	return $reponse;
 }
 
-function post() {
+function insertMsg() {
 	$bdd = co();
 
 	// Insertion du message à l'aide d'une requête préparée
@@ -63,9 +63,6 @@ function post() {
 	$req->bindParam(':message', $_POST['message'], PDO::PARAM_STR);
 	$req->bindParam(':utilisateurid', $_SESSION['pseudoID'], PDO::PARAM_STR);
 	$req->execute();
-
-	// Redirection du visiteur vers la page du minichat
-	header('Location: index.php');
 }
 
 
